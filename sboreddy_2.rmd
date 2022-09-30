@@ -1,0 +1,177 @@
+---
+title: "QUANTITATIVE MANAGEMENT MODELING"
+author: "Shashidhar Reddy Boreddy"
+date: "2022-09-29"
+output:
+  word_document: default
+  pdf_document: default
+  html_document: default
+pdf_document: default
+df_print: paged
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r}
+#installation("lpSolve")
+
+library("lpSolve") #Activation of lpSolve Package
+```
+
+To solve the problem we need to define the objective, constraints, direction and constants
+
+Objective Function
+
+$$\text{Objective function is to } Max \hspace{.3cm} Z = 420 (Q_1+Q_2+Q_3) + 360 (M_1+M_2+M_3) + 300 (P_1+P_2+P_3)$$
+
+\$\$
+
+\$\$
+
+$$ \text {that can be written as } Z = 420Q_1+360M_1+300P_1+420Q_2+360M_2+300P_2+420Q_3+360M_3+300P_3
+$$
+
+Subject to the following constraints
+
+$$
+Q_1+M_1+P_1 \le 750 
+$$
+
+$$
+Q_2+M_2+P_2 \le 900 
+$$
+
+$$
+Q_3+M_3+P_3 \le 450
+$$
+
+$$
+20Q_1+15M_1+12P_1 \le 13000
+$$
+
+$$
+20Q_2+15M_2+12P_2 \le 12000
+$$
+
+$$
+20Q_3+15M_3+12P_3 \le 5000
+$$
+
+$$
+Q_1+Q_2+Q_3 \le 900
+$$
+
+$$
+M_1+M_2+M_3 \le 1200
+$$
+
+$$
+P_1+P_2+P_3 \le 750 
+$$
+
+Non Negativity Constraints
+
+$$
+ Q_1,Q_2,Q_3,M_1,M_2,M_3,P_1,P_2,P_3 \ge 0
+$$
+
+The above constraints can be written as below
+
+$$
+Q_1+M_1+P_1+0Q_2+0M_2+0P_2+0Q_3+0M_3+0P_3 \le 750  
+$$
+
+$$
+ 0Q_1+0M_1+0P_1+Q_2+M_2+P_2+0Q_3+0M_3+0P_3 \le 900
+$$
+
+$$
+ 0Q_1+0M_1+0P_1+0Q_2+0M_2+0P_2+Q_3+M_3+P_3 \le 450
+$$
+
+$$
+20Q_1+15M_1+12P_1+0Q_2+0M_2+0P_2+0Q_3+0M_3+0P_3 \le 13000
+$$
+
+$$
+0Q_1+0M_1+0P_1+20Q_2+15M_2+12P_2+0Q_3+0M_3+0P_3 \le 12000
+$$
+
+$$
+0Q_1+0M_1+0P_1+0Q_2+0M_2+0P_2+20Q_3+15M_3+12P_3 \le 5000
+$$
+
+$$
+Q_1+0M_1+0P_1+Q_2+0M_2+0P_2+Q_3+0M_3+0P_3 \le 900
+$$
+
+$$
+0Q_1+M_1+0P_1+0Q_2+M_2+0P_2+0Q_3+M_3+0P_3 \le 1200
+$$
+
+$$
+0Q_1+0M_1+P_1+0Q_2+0M_2+P_2+0Q_3+0M_3+P_3 \le 750
+$$
+
+Describing the Objective Function - f.obj
+
+```{r}
+f.obj <- c(420,360,300,420,360,300,420,360,300)
+```
+
+Describing the Constraints - f.con
+
+```{r}
+
+f.con <- matrix(c(1,1,1,0,0,0,0,0,0,
+                  0,0,0,1,1,1,0,0,0,
+                  0,0,0,0,0,0,1,1,1,
+                  20,15,12,0,0,0,0,0,0,
+                  0,0,0,20,15,12,0,0,0,
+                  0,0,0,0,0,0,20,15,12,
+                  1,0,0,1,0,0,1,0,0,
+                  0,1,0,0,1,0,0,1,0,
+                  0,0,1,0,0,1,0,0,1), nrow = 9, byrow=T)
+
+```
+
+Describing the Direction of the constraints - f.dir
+
+```{r}
+f.dir <- c('<=',
+
+           '<=',
+
+           '<=',
+
+           '<=',
+
+           '<=',
+
+           '<=',
+
+           '<=',
+
+           '<=',
+
+           '<=')
+```
+
+Describing the constants i.e. the right hand side values - f.rhs
+
+```{r}
+f.rhs <- c(750,900,450,13000,12000,5000,900,1200,750)
+```
+
+Calling the lp function to solve the problem basing the objective function i.e. to maximize the profits
+
+```{r}
+lp('max',f.obj,f.con,f.dir,f.rhs)
+```
+
+Calling the lp function again to get the values for the variables defined above
+
+```{r}
+lp('max',f.obj,f.con,f.dir,f.rhs)$solution
+```
+
