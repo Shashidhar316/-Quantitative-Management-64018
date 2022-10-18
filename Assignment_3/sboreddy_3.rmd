@@ -1,0 +1,41 @@
+---
+title: "The Transportation Model"
+author: "Shashidhar Reddy Boreddy"
+date: "2022-10-16"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r}
+library(lpSolve)
+#The Unit shipping cost Of AED in PlantA warehouse1=$22
+#The Unit shipping cost Of AED in PlantA warehouse2=$14
+#The Unit shipping cost Of AED in PlantA warehouse3=$30
+#The Unit shipping cost Of AED in PlantB warehouse1=$16
+#The Unit shipping cost Of AED in PlantB warehouse2=$20
+#The Unit shipping cost Of AED in PlantB warehouse3=$24
+#The Unit Production cost Of AED in PlantA =$600
+#The Unit Production cost Of AED in plantB =$625
+#PlantA's monthly production capacity = 100
+#PlantB's monthly production capacity = 120
+#warehouse1 Monthly Demand = 80
+#warehouse2 Monthly Demand = 60
+#warehouse3 Monthly Demand = 70
+costs<-matrix(c(622,614,630,0,
+                641,645,649,0),ncol=4,byrow=TRUE)
+row.signs<-rep("<=",2)
+row.rhs<-c(100,120)
+
+col.signs<-rep(">=",4)
+col.rhs<-c(80,60,70,10)
+
+lptrans<-lp.transport(costs,"min",row.signs,row.rhs,col.signs,col.rhs)
+
+lptrans$solution
+```
+
+```{r}
+lptrans$objval
+
+```
