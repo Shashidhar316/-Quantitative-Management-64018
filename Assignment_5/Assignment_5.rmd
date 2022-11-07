@@ -1,0 +1,63 @@
+---
+title: "Goal Programming"
+author: "Shashidhar Reddy Boreddy"
+date: "2022-11-06"
+output:
+  word_document: default
+  pdf_document: default
+  html_document: default
+---
+#Emax Corporation's Research & Development Division has created three new items. It is now necessary to decide which combination of these items should be manufactured. Management intends to prioritize three factors: overall profit, worker stability, and increasing the company's earnings from $75 million this year to $75 million next year
+
+#Objective Function
+#Maximize Z = P - 6C - 3D, where
+#P = Total discounted profit over the life of the new products
+#C = Change in either direction towards the current level of employment
+#D = decrease if any in next year’s earnings from the current year’s level
+
+#Displaying The Requried Libraries  
+```{r}
+library(lpSolve)
+library(lpSolveAPI)
+```
+
+#Printing the model after loading the LP file from the current path
+#y1p and y1m are defined as the amount over (if any) and under (if any) the employment level target.
+#Defining y2p and y2m in the same way for the earnings objective next year
+#Define x1, x2, and x3 as the corresponding production rates of Products 1 and 2
+#P can also be expressed in terms of x1, x2, and x3, as well as the objective function in terms of x1, x2, x3, y1p, y1m, y2p, and y2m.
+
+
+```{r}
+sb_emax <- read.lp("max.lp")
+print(sb_emax)
+```
+
+#The following table shows the influence of each of the new items (per unit rate of production) on each of these factors
+
+```{r}
+TB_Emax <- matrix(c("Total Profit", "Employment Level", "Earnings Next Year",
+                       20,6,8,
+                       15,4,7,
+                       25,5,5,
+                       "Maximize","=50",">=75",
+                       "Millions of Dollars", "Hundreds of Employees", "Millions of Dollars"), ncol=6, byrow = F)
+colnames(TB_Emax) <- c("Factor","Product 1", "Product 2", "Product 3", "Goal", "Units")
+as.table(TB_Emax)
+```
+
+#To acquire the objective and variable values, solving the goal programming model.
+```{r}
+solve(sb_emax)
+get.objective(sb_emax)
+get.variables(sb_emax)
+```
+
+#Interpretation:
+#1.The combination units that the business must use in order to optimize the goal function are X1 - Product 1, X2 - Product 2, and X3 - Product 3. It explains that because the final solution is 0, 20 units of Product 1 and 15 units of Product 2 cannot be created as planned. However, due to a modification in X3, the only product that can be made is product 3. To maximize profits, purchase 15 units of Product 3.
+
+#2.The firm's employment levels were surpassed by 25 hundred workers (Y1P), when the initial target was to sustain the employment level with a maximum of 50 hundred employees. The corporation must pay a penalty for the increase in personnel numbers.
+
+#3.The major purpose of Y2P and Y2M was to predict whether wages will rise or fall in the next year. As the present level is "0," it is apparent that there is no rise or decrease in the next year's profits.
+
+#4.The profit that the business seeks to maximize is 225 million dollars, as determined by the objective function value.
