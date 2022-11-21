@@ -1,0 +1,49 @@
+---
+title: "Integer programming"
+author: "Shashidhar Reddy"
+date: "2022-11-18"
+output:
+  word_document: default
+  pdf_document: default
+  html_document: default
+---
+# Questions 
+
+# Formulate and solving the problem :
+
+```{r}
+# Loading required package
+library(lpSolveAPI)
+getwd()
+setwd( "C:/Users/shash/OneDrive/Documents")
+# Reading the lp file
+IP <- read.lp("shashi.lp")
+#Displaying the file
+IP
+# See if the model converges
+
+solve(IP)
+```
+
+# What was the total cost?
+```{r}
+# Refer to the Objective Function solution.
+get.objective(IP)
+# In order to meet the required number of workers working every day, the weekly total salary must be $25,765. In other words, the total weekly wage cost is $25,675.
+
+```
+
+```{r}
+# Determine the best number of variables.
+get.variables(IP)
+
+
+# Total: $25,675.
+```
+# How many workers are available each day?
+```{r}
+# Look at the restrictions.
+get.constraints(IP)
+
+
+```
