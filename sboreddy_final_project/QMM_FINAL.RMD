@@ -1,0 +1,50 @@
+---
+title: "Final Assignment"
+author: "Shashidhar Reddy Boreddy"
+date: "2022-12-13"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(lpSolveAPI)
+SB_LP <- read.lp("C:/Users/shash/Dropbox/PC/Downloads/qmm-final.lp")
+SB_LP
+```
+
+
+
+
+
+```{r}
+solve(SB_LP)
+```
+***The value 0 suggests that the model can be developed and solved. In this case, this indicates that we may divide students into four groups by satisfying both the objective function and the constraints***
+```{r}
+get.objective(SB_LP)
+```
+
+***It is the objective function maximum value and considering the constraints.***
+
+```{r}
+get.variables(SB_LP)
+```
+
+#Based on the aforementioned results, the following groups will be constructed to optimize the chances of success for each group:
+\newline
+_Group 1 - 6,10,11_
+\newline
+_Group 2 - 4,7,12_
+\newline
+_Group 3 - 3,5,9_
+\newline
+_Group 4 - 1,2,8_
+
+
+
